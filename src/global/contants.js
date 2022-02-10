@@ -1,0 +1,1 @@
+// export const IMAGE_SPLASH = '../assets/images/splash.jpeg'
