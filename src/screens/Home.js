@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image,ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Image,ScrollView,RefreshControl  } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { getMeme } from '../api/memes'
 import { useFocusEffect } from '@react-navigation/native'
@@ -6,6 +6,7 @@ import  Axios  from 'axios'
 import { ActivityIndicator, TextInput } from 'react-native-paper'
 const Home = () => {
   const [posts, setPosts] = useState(null)
+  const [refreshing, setRefreshing] = useState(false);
   useFocusEffect(
     useCallback(() => {
         (async ()=>{
@@ -16,19 +17,36 @@ const Home = () => {
       [],
     )
   )
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    (async ()=>{
+      const response = await getMeme()
+      setPosts(response.data.data.children)
+      setRefreshing(false);
+    })() 
+  }, []);
+
   return (
     <View style={styles.container}>
-      
-    {posts === null?(
+
+  {posts === null?(
         <View style={{flex:1,justifyContent:'center'}}>
           <ActivityIndicator/>        
         </View>
       ):(
         <>
         <View style={{flex:1}}>
-          <TextInput
-          style={{marginVertical:20}}
-          label={'Search'}/>
+          <TextInput     
+          style={{marginVerTop:20}}
+          label={'Search'}/> 
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+          }
+          >
           {
             posts.map(post =>{
               console.log('shitposting? ',post.data.link_flair_text,'image?',post.data.post_hint,'imagen url: ',post.data.url);
@@ -53,10 +71,13 @@ const Home = () => {
               }
             })
           } 
+          </ScrollView>
         </View>        
         </>
 
-      )}        
+      )}                
+      
+  
     </View>
   )
 }
@@ -70,7 +91,8 @@ const styles = StyleSheet.create({
   },
   containerCard:{
     flex:1,
-    height:'50%'
+    height:290,
+    marginTop:20
   },
   images:{
     borderTopRightRadius:10,
