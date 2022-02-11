@@ -1,1 +1,1 @@
-// export const IMAGE_SPLASH = '../assets/images/splash.jpeg'
+export const MEME_URL = "https://www.reddit.com/r/chile/new/.json?limit=100"
