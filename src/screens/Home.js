@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   containerCard:{
     flex:1,
     height:290,
-    marginTop:20
+    marginVertical:20
   },
   images:{
     borderTopRightRadius:10,
